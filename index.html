@@ -43,7 +43,7 @@
       const loader = new THREE.STLLoader()
          const loader = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
       loader.load(
-          'top_cover.stl',
+          'example.stl',
           function (geometry) {
               const mesh = new THREE.Mesh(geometry)
               scene.add(mesh)
