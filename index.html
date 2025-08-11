@@ -41,11 +41,12 @@
       controls.enableDamping = true
 
       const loader = new THREE.STLLoader()
-      loader.load(
-          'example.stl',
-          function (geometry) {
-              const mesh = new THREE.Mesh(geometry)
-              scene.add(mesh)
+      loader.load('example.stl', function (geometry) {
+        const material = new THREE.MeshStandardMaterial({
+          color: 0x00ff00,
+          metallness: 0.5,
+          roughness: 0.5});
+              const mesh = new THREE.Mesh(geometry)  scene.add(mesh)
           },
           (xhr) => {
               console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
