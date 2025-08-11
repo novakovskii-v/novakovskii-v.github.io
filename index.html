@@ -1,82 +1,59 @@
-  <!doctype html>
+
+
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>STL Loader</title>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<head>
+  <meta charset="UTF-8">
+  <title>Three.js STL Model Loading Example</title>
+  <style>
+    body { margin: 0; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/three@latest/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three/examples/jsm/loaders/STLLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three/examples/jsm/controls/OrbitControls.js"></script>
+<script>
+  // Основная сцена
+  const scene = new THREE.Scene();
 
-    <script>
-      const scene = new THREE.Scene()
-      scene.add(new THREE.AxesHelper(5))
+  // Источник освещения
+  const light = new THREE.DirectionalLight(0xffffff, 1);
+  light.position.set(1, 1, 1);
+  scene.add(light);
 
-      const light = new THREE.SpotLight()
-      light.position.set(20, 20, 20)
-      scene.add(light)
+  // Камера
+  const camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+  );
+  camera.position.z = 5;
 
-      const camera = new THREE.PerspectiveCamera(
-          75,
-          window.innerWidth / window.innerHeight,
-          0.1,
-          1000
-      )
-      camera.position.z = 300
+  // Рендерер
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
 
-      const renderer = new THREE.WebGLRenderer()
-      renderer.setSize(window.innerWidth, window.innerHeight)
-      document.body.appendChild(renderer.domElement)
+  // Контроль камеры
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+  controls.update();
 
-      const controls = new THREE.OrbitControls(camera, renderer.domElement)
-      controls.enableDamping = true
+  // Загрузчик моделей STL
+  const loader = new THREE.STLLoader();
+  loader.load('topcover.stl', function(geometry) {
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x00ff00,   // Зеленый цвет
+      metalness: 0.5,
+      roughness: 0.5
+    });
 
-      const loader = new THREE.STLLoader()
-      loader.load('example.stl', function (geometry) {
-          //const material = new THREE.MeshStandardMaterial({
-          //color: 0x00ff00,
-          //metallness: 0.5,
-          //roughness: 0.5});
-              const mesh = new THREE.Mesh(geometry)  scene.add(mesh)
-          },
-          (xhr) => {
-              console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-          },
-          (error) => {
-              console.log(error)
-          }
-      )
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(...
 
-      window.addEventListener('resize', onWindowResize, false)
-      function onWindowResize() {
-          camera.aspect = window.innerWidth / window.innerHeight
-          camera.updateProjectionMatrix()
-          renderer.setSize(window.innerWidth, window.innerHeight)
-          render()
-      }
+Чтобы увидеть весь текст, нажмите на кнопку *Развернуть весь ответ* ⬇️
 
-      function animate() {
-          requestAnimationFrame(animate)
-
-          controls.update()
-
-          render()
-      }
-
-      function render() {
-          renderer.render(scene, camera)
-      }
-
-      animate()
-    </script>
-  </body>
-</html>
